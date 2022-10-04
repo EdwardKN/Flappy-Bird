@@ -16,7 +16,7 @@ function init(){
     constants = {
         gravity: 1*canvas.height/1000
     }
-    player = new Player(canvas.width/10,canvas.height/3,canvas.width/20,canvas.height/10,0.5*canvas.height/1000,0);
+    player = new Player(canvas.width/10,canvas.height/3,canvas.width/21,canvas.height/7,0.5*canvas.height/1000,0);
     createPipe();
 }
 function createPipe(){
