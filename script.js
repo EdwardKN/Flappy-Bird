@@ -21,7 +21,7 @@ function init(){
             y:canvas.height/1000
         }
     };
-    player = new Player(canvas.width/10,canvas.height/3,canvas.width/21,canvas.height/7,0.5*constants.sizeConstant.y,0);
+    player = new Player(canvas.width/10,canvas.height/3,canvas.width/24,canvas.height/8,0.5*constants.sizeConstant.y,0);
     createPipe();
 }
 function createPipe(){
