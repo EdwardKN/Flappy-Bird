@@ -1,15 +1,19 @@
 var canvas = document.getElementById("canvas");
 var c = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+
 
 var player;
 var pipeArray = [];
-const constants = {
-    gravity: 1*canvas.height/1000
-}
+var constants;
+
 function init(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    pipeArray = [];
+    constants = {
+        gravity: 1*canvas.height/1000
+    }
     player = new Player(canvas.width/20,canvas.height/3,canvas.width/20,canvas.height/10,0.5*canvas.height/1000,0);
     createPipe();
 }
@@ -33,18 +37,26 @@ function Player(x,y,width,height,weight,velocityY){
             c.fillStyle = this.color;
             c.fillRect(this.x,this.y,this.width,this.height);
 
+            c.fillStyle = "gray";
             c.font = "30px Arial";
             c.fillText("Poäng: " +this.points, canvas.width/2, 50);
         };
 
         this.update = function() {
-            this.velocityY -= constants.gravity
-            this.y -= this.velocityY*this.weight
+            if(this.y >= 0){
+                if(this.started === true){
+                    this.velocityY -= constants.gravity;
+                    this.y -= this.velocityY*this.weight;
+                }
+            }else{
+                this.dead = true;
+            }
+            
             this.draw();
             
             if(this.y + this.height > canvas.height){
                 this.dead = true;
-            }
+            };
         };
     
 };
@@ -59,6 +71,7 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
     this.created = false;
     this.dead = false;
     this.givenPoint = false;
+    this.color = "black";
 
     this.draw = function(){
         c.fillStyle = this.color;
@@ -67,11 +80,10 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
     };
 
     this.update = function(){
-        if(this.dead === false){
-
+        if(this.dead === false && player.started === true){
             this.draw();
-            this.x+=(2+player.points/20)*canvas.width/1000
-            if(this.x > canvas.width/3-player.points*10 && this.created === false){
+            this.x+=(2+player.points/20)*canvas.width/1000;
+            if(this.x > canvas.width/3-player.points*5*canvas.width/1000 && this.created === false){
                 createPipe();
                 this.created = true;
             }
@@ -86,7 +98,6 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
                 this.givenPoint = true;
                 player.points++;
             }
-
         }
 
     };
@@ -107,11 +118,13 @@ function animate(){
     if(player.dead === false){
         c.clearRect(0,0,canvas.width,canvas.height)
 
-        player.update();
-    
         pipeArray.forEach(Pipe=> {
             Pipe.update(pipeArray);
         });
+
+        player.update();
+    
+        
     }
     
 
@@ -121,9 +134,16 @@ function animate(){
 window.addEventListener("keyup",function(event){
     console.log(event.code)
     if(event.code === "Space"){
+        player.started = true;
         player.velocityY = 20*canvas.height/1000;
     }
+    if(event.code === "KeyR"){
+        init();
+    }
     
+})
+window.addEventListener("resize",function(){
+    init();
 })
 init();
 animate();
