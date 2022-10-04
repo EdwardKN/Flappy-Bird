@@ -53,14 +53,11 @@ function Player(x,y,width,height,weight,velocityY){
             }else{
                 this.angle = -this.velocityY;
             }
-            if(this.y >= 0){
-                if(this.started === true){
-                    this.velocityY -= constants.gravity;
-                    this.y -= this.velocityY*this.weight;
-                }
-            }else{
-                this.dead = true;
+            if(this.started === true){
+                this.velocityY -= constants.gravity;
+                this.y -= this.velocityY*this.weight;
             }
+            
             
             this.draw();
             
@@ -78,7 +75,8 @@ function drawRotatedRectangle(x,y,w,h,color,angle){
         x:x+w/2,
         y:y+h/2
     };
-    let tmp_point = rotate_point(x,y,middlePoint.x,middlePoint.y,angle);
+    let tmp_point;
+    tmp_point = rotate_point(x,y,middlePoint.x,middlePoint.y,angle);
     c.lineTo(tmp_point.x , tmp_point.y);
     tmp_point = rotate_point(x+w,y,middlePoint.x,middlePoint.y,angle);
     c.lineTo(tmp_point.x , tmp_point.y);
@@ -175,7 +173,9 @@ window.addEventListener("keyup",function(event){
     console.log(event.code)
     if(event.code === "Space"){
         player.started = true;
-        player.velocityY = 20*canvas.height/1000;
+        if(player.y > 0){
+            player.velocityY = 20*canvas.height/1000;
+        }
         if(player.dead === true && deadTimer > 30){
             init();
         }
