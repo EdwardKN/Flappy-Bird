@@ -12,11 +12,16 @@ function init(){
     deadTimer = 0;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    
     pipeArray = [];
     constants = {
-        gravity: 1*canvas.height/1000
-    }
-    player = new Player(canvas.width/10,canvas.height/3,canvas.width/21,canvas.height/7,0.5*canvas.height/1000,0);
+        gravity: 1*canvas.height/1000,
+        sizeConstant:{
+            x:canvas.width/1000,
+            y:canvas.height/1000
+        }
+    };
+    player = new Player(canvas.width/10,canvas.height/3,canvas.width/21,canvas.height/7,0.5*constants.sizeConstant.y,0);
     createPipe();
 }
 function createPipe(){
@@ -37,31 +42,34 @@ function Player(x,y,width,height,weight,velocityY){
         this.angle = 45;
         
         this.draw = function(){
-            c.fillStyle = this.color;
             drawRotatedRectangle(this.x,this.y,this.width,this.height, this.color,this.angle)
-                            
-            c.fillStyle = "gray";
+                                       
+            c.fillStyle = "black";
             c.font = "30px Arial";
             c.fillText("Poäng: " +this.points, canvas.width/2-50, 50);
+
         };
 
         this.update = function() {
             if(this.velocityY < 0){
-                console.log(this.velocityY)
-
-                this.angle = -this.velocityY*2;
+                this.angle = -this.velocityY*2/constants.sizeConstant.y;
             }else{
-                this.angle = -this.velocityY;
+                this.angle = -this.velocityY/constants.sizeConstant.y;
             }
-            if(this.started === true){
-                this.velocityY -= constants.gravity;
-                this.y -= this.velocityY*this.weight;
+
+            if(this.started === true && this.y + this.height < canvas.height){
+                this.velocityY -= constants.gravity / constants.sizeConstant.y;
+                this.y -= this.velocityY*this.weight / constants.sizeConstant.y;
+            }
+            if(this.y + this.height > canvas.height){
+                this.angle = 90;
             }
             
             
             this.draw();
             
             if(this.y + this.height > canvas.height){
+                
                 this.dead = true;
             };
         };
@@ -106,7 +114,7 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
     this.created = false;
     this.dead = false;
     this.givenPoint = false;
-    this.color = "black";
+    this.color = "gray";
 
     this.draw = function(){
         c.fillStyle = this.color;
@@ -117,17 +125,16 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
     this.update = function(){
         if(this.dead === false && player.started === true){
             this.draw();
-            this.x+=(2+player.points/20)*canvas.width/1000;
-            if(this.x > canvas.width/3-player.points*5*canvas.width/1000 && this.created === false){
+            this.x+=(2+player.points/20)*constants.sizeConstant.x;
+            if(this.x > canvas.width/3-player.points*5*constants.sizeConstant.x && this.created === false){
                 createPipe();
                 this.created = true;
             }
             if(this.x>canvas.width+this.width){
                 this.dead = true;
             }
-            let middle = (player.width+player.height)/2
-            if(detectCollition(player.x,player.y,middle,middle,canvas.width-this.x,0,this.width,this.heightUpper-this.gapPosition) ||
-            detectCollition(player.x,player.y,middle,middle,canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,this.width,this.heightBottom + gapPosition)){
+            if(detectCollition(player.x,player.y,player.width,player.height,canvas.width-this.x,0,this.width,this.heightUpper-this.gapPosition) ||
+            detectCollition(player.x,player.y,player.width,player.height,canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,this.width,this.heightBottom + gapPosition)){
                 player.dead = true;
             }
             if(detectCollition(player.x+ player.width/2,0,player.width,5,canvas.width-this.x+this.width/2,0,this.width,5) && this.givenPoint === false){
@@ -151,19 +158,21 @@ function detectCollition(x,y,w,h,x2,y2,w2,h2){
 
 function animate(){
     requestAnimationFrame(animate);
-    if(player.dead === false){
-        c.clearRect(0,0,canvas.width,canvas.height)
+    c.clearRect(0,0,canvas.width,canvas.height)
 
+    if(player.dead === true){
+        deadTimer++;
+        pipeArray.forEach(Pipe=> {
+            Pipe.draw();
+        });
+    }else{
         pipeArray.forEach(Pipe=> {
             Pipe.update(pipeArray);
         });
-
-        player.update();
-    
-        
-    }else{
-        deadTimer++;
     }
+    
+    player.update();
+
     
 
     
@@ -173,10 +182,10 @@ window.addEventListener("keyup",function(event){
     console.log(event.code)
     if(event.code === "Space"){
         player.started = true;
-        if(player.y > 0){
-            player.velocityY = 20*canvas.height/1000;
+        if(player.y > 0 && player.dead === false){
+            player.velocityY = 20*constants.sizeConstant.y;
         }
-        if(player.dead === true && deadTimer > 30){
+        if(player.dead === true && player.y + player.height >= canvas.height){
             init();
         }
     }
