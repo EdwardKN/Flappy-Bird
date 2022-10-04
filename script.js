@@ -18,7 +18,7 @@ function init(){
     createPipe();
 }
 function createPipe(){
-    pipeArray.push(new Pipe(0,0,canvas.width/10,canvas.height/2.9,canvas.height/2.9,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
+    pipeArray.push(new Pipe(0,0,canvas.width/10,canvas.height/2.9,canvas.height/2.9 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
 }
 
 function Player(x,y,width,height,weight,velocityY){    
@@ -39,7 +39,7 @@ function Player(x,y,width,height,weight,velocityY){
 
             c.fillStyle = "gray";
             c.font = "30px Arial";
-            c.fillText("Poäng: " +this.points, canvas.width/2, 50);
+            c.fillText("Poäng: " +this.points, canvas.width/2-50, 50);
         };
 
         this.update = function() {
