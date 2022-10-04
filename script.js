@@ -6,15 +6,17 @@ var c = canvas.getContext("2d");
 var player;
 var pipeArray = [];
 var constants;
+var deadTimer;
 
 function init(){
+    deadTimer = 0;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     pipeArray = [];
     constants = {
         gravity: 1*canvas.height/1000
     }
-    player = new Player(canvas.width/20,canvas.height/3,canvas.width/20,canvas.height/10,0.5*canvas.height/1000,0);
+    player = new Player(canvas.width/10,canvas.height/3,canvas.width/20,canvas.height/10,0.5*canvas.height/1000,0);
     createPipe();
 }
 function createPipe(){
@@ -32,17 +34,25 @@ function Player(x,y,width,height,weight,velocityY){
         this.color = "black";
         this.dead = false;
         this.points = 0;
+        this.angle = 45;
         
         this.draw = function(){
             c.fillStyle = this.color;
-            c.fillRect(this.x,this.y,this.width,this.height);
-
+            drawRotatedRectangle(this.x,this.y,this.width,this.height, this.color,this.angle)
+                            
             c.fillStyle = "gray";
             c.font = "30px Arial";
             c.fillText("Poäng: " +this.points, canvas.width/2-50, 50);
         };
 
         this.update = function() {
+            if(this.velocityY < 0){
+                console.log(this.velocityY)
+
+                this.angle = -this.velocityY*2;
+            }else{
+                this.angle = -this.velocityY;
+            }
             if(this.y >= 0){
                 if(this.started === true){
                     this.velocityY -= constants.gravity;
@@ -60,6 +70,33 @@ function Player(x,y,width,height,weight,velocityY){
         };
     
 };
+
+function drawRotatedRectangle(x,y,w,h,color,angle){
+    c.fillStyle = color;
+    c.beginPath();
+    let middlePoint = {
+        x:x+w/2,
+        y:y+h/2
+    };
+    let tmp_point = rotate_point(x,y,middlePoint.x,middlePoint.y,angle);
+    c.lineTo(tmp_point.x , tmp_point.y);
+    tmp_point = rotate_point(x+w,y,middlePoint.x,middlePoint.y,angle);
+    c.lineTo(tmp_point.x , tmp_point.y);
+    tmp_point = rotate_point(x+w,y+h,middlePoint.x,middlePoint.y,angle);
+    c.lineTo(tmp_point.x , tmp_point.y);
+    tmp_point = rotate_point(x,y+h,middlePoint.x,middlePoint.y,angle);
+    c.lineTo(tmp_point.x , tmp_point.y);
+
+    c.fill();
+}
+
+function rotate_point(pointX, pointY, originX, originY, angle) {
+    angle = angle * Math.PI / 180.0;
+    return {
+        x: Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX,
+        y: Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY
+    };
+}
 
 function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
     this.x = x;
@@ -90,8 +127,9 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
             if(this.x>canvas.width+this.width){
                 this.dead = true;
             }
-            if(detectCollition(player.x,player.y,player.width,player.height,canvas.width-this.x,0,this.width,this.heightUpper-this.gapPosition) ||
-            detectCollition(player.x,player.y,player.width,player.height,canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,this.width,this.heightBottom + gapPosition)){
+            let middle = (player.width+player.height)/2
+            if(detectCollition(player.x,player.y,middle,middle,canvas.width-this.x,0,this.width,this.heightUpper-this.gapPosition) ||
+            detectCollition(player.x,player.y,middle,middle,canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,this.width,this.heightBottom + gapPosition)){
                 player.dead = true;
             }
             if(detectCollition(player.x+ player.width/2,0,player.width,5,canvas.width-this.x+this.width/2,0,this.width,5) && this.givenPoint === false){
@@ -125,6 +163,8 @@ function animate(){
         player.update();
     
         
+    }else{
+        deadTimer++;
     }
     
 
@@ -136,10 +176,11 @@ window.addEventListener("keyup",function(event){
     if(event.code === "Space"){
         player.started = true;
         player.velocityY = 20*canvas.height/1000;
+        if(player.dead === true && deadTimer > 30){
+            init();
+        }
     }
-    if(event.code === "KeyR"){
-        init();
-    }
+    
     
 })
 window.addEventListener("resize",function(){
