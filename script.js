@@ -1,8 +1,6 @@
 var canvas = document.getElementById("canvas");
 var c = canvas.getContext("2d");
 
-
-
 var player;
 var pipeArray = [];
 var constants;
@@ -56,6 +54,9 @@ function Player(x,y,width,height,weight,velocityY){
             }else{
                 this.angle = -this.velocityY/constants.sizeConstant.y;
             }
+            if(this.angle > 90){
+                this.angle = 90;
+            }
 
             if(this.started === true && this.y + this.height < canvas.height){
                 this.velocityY -= constants.gravity / constants.sizeConstant.y;
@@ -63,8 +64,8 @@ function Player(x,y,width,height,weight,velocityY){
             }
             if(this.y + this.height > canvas.height){
                 this.angle = 90;
+                this.y = canvas.height-this.width;
             }
-            
             
             this.draw();
             
@@ -172,10 +173,6 @@ function animate(){
     }
     
     player.update();
-
-    
-
-    
 };
 
 window.addEventListener("keyup",function(event){
@@ -189,8 +186,6 @@ window.addEventListener("keyup",function(event){
             init();
         }
     }
-    
-    
 })
 window.addEventListener("resize",function(){
     init();
