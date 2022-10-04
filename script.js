@@ -5,6 +5,25 @@ var player;
 var pipeArray = [];
 var constants;
 var deadTimer;
+var images = {
+    pipe:{
+        img:new Image(),
+        src:"/images/pipe.png"
+    },
+    player:{
+        img:new Image(),
+        src:"/images/bird.png" 
+    },
+    background:{
+        img:new Image(),
+        src:"/images/background.png" ,
+        offset:0
+    }
+}
+
+Object.entries(images).forEach(image => {
+    image[1].img.src = image[1].src;
+});
 
 function init(){
     deadTimer = 0;
@@ -19,7 +38,7 @@ function init(){
             y:canvas.height/1000
         }
     };
-    player = new Player(canvas.width/10,canvas.height/3,canvas.width/24,canvas.height/8,0.5*constants.sizeConstant.y,0);
+    player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5*constants.sizeConstant.y,0);
     createPipe();
 }
 function createPipe(){
@@ -40,7 +59,7 @@ function Player(x,y,width,height,weight,velocityY){
         this.angle = 45;
         
         this.draw = function(){
-            drawRotatedRectangle(this.x,this.y,this.width,this.height, this.color,this.angle)
+            drawRotatedImage(this.x,this.y,this.width,this.height, images.player.img,this.angle)
                                        
             c.fillStyle = "black";
             c.font = "30px Arial";
@@ -79,31 +98,36 @@ function Player(x,y,width,height,weight,velocityY){
 
 function drawRotatedRectangle(x,y,w,h,color,angle){
     c.fillStyle = color;
-    c.beginPath();
+    let degree = angle * Math.PI / 180
     let middlePoint = {
         x:x+w/2,
         y:y+h/2
     };
-    let tmp_point;
-    tmp_point = rotate_point(x,y,middlePoint.x,middlePoint.y,angle);
-    c.lineTo(tmp_point.x , tmp_point.y);
-    tmp_point = rotate_point(x+w,y,middlePoint.x,middlePoint.y,angle);
-    c.lineTo(tmp_point.x , tmp_point.y);
-    tmp_point = rotate_point(x+w,y+h,middlePoint.x,middlePoint.y,angle);
-    c.lineTo(tmp_point.x , tmp_point.y);
-    tmp_point = rotate_point(x,y+h,middlePoint.x,middlePoint.y,angle);
-    c.lineTo(tmp_point.x , tmp_point.y);
-
-    c.fill();
+    c.save();
+    c.translate(middlePoint.x,middlePoint.y)
+    c.rotate(degree);
+    c.fillRect(-w/2,-h/2,w,h);
+    c.restore();
 }
-
-function rotate_point(pointX, pointY, originX, originY, angle) {
-    angle = angle * Math.PI / 180.0;
-    return {
-        x: Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX,
-        y: Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY
+function drawRotatedImage(x,y,w,h,img,angle){
+    let degree = angle * Math.PI / 180
+    let middlePoint = {
+        x:x+w/2,
+        y:y+h/2
     };
+    c.save();
+
+    c.translate(middlePoint.x,middlePoint.y)
+    c.rotate(degree);
+    if(angle === 180){
+        c.scale(-1, 1);
+
+    }
+
+    c.drawImage(img,-w/2,-h/2,w,h);
+    c.restore();
 }
+
 
 function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
     this.x = x;
@@ -119,14 +143,15 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
 
     this.draw = function(){
         c.fillStyle = this.color;
-        c.fillRect(canvas.width-this.x,0,this.width,this.heightUpper-this.gapPosition);
-        c.fillRect(canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,this.width,this.heightBottom + gapPosition);
+        drawRotatedImage(canvas.width-this.x,0,this.width,this.heightUpper-this.gapPosition,images.pipe.img,180)
+        drawRotatedImage(canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,(this.width),this.heightBottom + gapPosition,images.pipe.img,0)
+
     };
 
     this.update = function(){
         if(this.dead === false && player.started === true){
             this.draw();
-            this.x+=(2+player.points/20)*constants.sizeConstant.x;
+            this.x+=(2+player.points/50)*constants.sizeConstant.x;
             if(this.x > canvas.width/3-player.points*5*constants.sizeConstant.x && this.created === false){
                 createPipe();
                 this.created = true;
@@ -160,16 +185,22 @@ function detectCollition(x,y,w,h,x2,y2,w2,h2){
 function animate(){
     requestAnimationFrame(animate);
     c.clearRect(0,0,canvas.width,canvas.height)
-
+    c.drawImage(images.background.img,images.background.offset%canvas.width,0,canvas.width,canvas.height)
+    c.drawImage(images.background.img,images.background.offset%canvas.width + canvas.width-1,0,canvas.width,canvas.height)
     if(player.dead === true){
         deadTimer++;
         pipeArray.forEach(Pipe=> {
             Pipe.draw();
         });
+        
     }else{
         pipeArray.forEach(Pipe=> {
             Pipe.update(pipeArray);
         });
+        if(player.started === true){
+            images.background.offset -=(1+player.points/20)*constants.sizeConstant.x;
+        }
+
     }
     
     player.update();
