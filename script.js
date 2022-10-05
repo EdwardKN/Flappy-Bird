@@ -143,8 +143,8 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
 
     this.draw = function(){
         c.fillStyle = this.color;
-        drawRotatedImage(canvas.width-this.x,0,this.width,this.heightUpper-this.gapPosition,images.pipe.img,180)
-        drawRotatedImage(canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,(this.width),this.heightBottom + gapPosition,images.pipe.img,0)
+        drawRotatedImage(canvas.width-this.x,-100,this.width,this.heightUpper-this.gapPosition+100,images.pipe.img,180)
+        drawRotatedImage(canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,(this.width),this.heightBottom + gapPosition +50,images.pipe.img,0)
 
     };
 
