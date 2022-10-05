@@ -223,7 +223,7 @@ window.addEventListener("keyup",function(event){
     if(event.code === "Space"){
         player.started = true;
         if(player.y > 0 && player.dead === false){
-            player.velocityY = 25;
+            player.velocityY = 20;
         }
         if(player.dead === true && player.y + player.height >= canvas.height-20){
             init();
@@ -234,7 +234,7 @@ window.addEventListener("mouseup",function(event){
     console.log(event.code)
     player.started = true;
     if(player.y > 0 && player.dead === false){
-        player.velocityY = 25;
+        player.velocityY = 20;
     }
     if(player.dead === true && player.y + player.height >= canvas.height-20){
         init();
