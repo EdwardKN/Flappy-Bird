@@ -65,7 +65,6 @@ function Player(x,y,width,height,weight,velocityY){
             c.fillStyle = "black";
             c.font = "30px Arial";
             c.fillText("Poäng: " +this.points, canvas.width/2-50, 50);
-
         };
 
         this.update = function() {
@@ -143,9 +142,10 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
 
     this.draw = function(){
         c.fillStyle = this.color;
+    
         drawRotatedImage(canvas.width-this.x,-100,this.width,this.heightUpper-this.gapPosition+100,images.pipe.img,180,true)
         drawRotatedImage(canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,(this.width),this.heightBottom + gapPosition +50,images.pipe.img,0)
-
+        
     };
 
     this.update = function(){
@@ -206,41 +206,23 @@ function animate(){
     player.update();
 };
 
+
 window.addEventListener("keyup",function(event){
-    console.log(event.code)
-    if(event.code === "Space"){
-        player.started = true;
-        if(player.y > 0 && player.dead === false){
-            player.velocityY = 25*constants.sizeConstant.y;
-        }
-        if(player.dead === true && player.y + player.height >= canvas.height-20){
-            init();
-        }
-    }
-})
-window.addEventListener("keyup",function(event){
-    console.log(event.code)
-    if(event.code === "Space"){
-        player.started = true;
-        if(player.y > 0 && player.dead === false){
-            player.velocityY = 18;
-        }
-        if(player.dead === true && player.y + player.height >= canvas.height-20){
-            init();
-        }
-    }
+    jump();
 })
 window.addEventListener("mouseup",function(event){
-    console.log(event.code)
+    jump();
+    
+})
+function jump(){
     player.started = true;
-    if(player.y > 0 && player.dead === false){
+    if(player.y > canvas.height/15 && player.dead === false){
         player.velocityY = 18;
     }
     if(player.dead === true && player.y + player.height >= canvas.height-20){
         init();
     }
-    
-})
+}
 
 window.addEventListener("resize",function(){
     init();
