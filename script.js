@@ -223,7 +223,7 @@ window.addEventListener("keyup",function(event){
     if(event.code === "Space"){
         player.started = true;
         if(player.y > 0 && player.dead === false){
-            player.velocityY = 25*constants.sizeConstant.y;
+            player.velocityY = 25;
         }
         if(player.dead === true && player.y + player.height >= canvas.height-20){
             init();
