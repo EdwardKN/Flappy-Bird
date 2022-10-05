@@ -81,14 +81,14 @@ function Player(x,y,width,height,weight,velocityY){
                 this.velocityY -= constants.gravity / constants.sizeConstant.y;
                 this.y -= this.velocityY*this.weight / constants.sizeConstant.y;
             }
-            if(this.y + this.height > canvas.height){
+            if(this.y + this.height > canvas.height -20){
                 this.angle = 90;
                 this.y = canvas.height-this.width;
             }
             
             this.draw();
             
-            if(this.y + this.height > canvas.height){
+            if(this.y + this.height >= canvas.height- 20 ){
                 
                 this.dead = true;
             };
@@ -213,7 +213,7 @@ window.addEventListener("keyup",function(event){
         if(player.y > 0 && player.dead === false){
             player.velocityY = 20*constants.sizeConstant.y;
         }
-        if(player.dead === true && player.y + player.height >= canvas.height){
+        if(player.dead === true && player.y + player.height >= canvas.height-20){
             init();
         }
     }
