@@ -5,6 +5,7 @@ var player;
 var pipeArray = [];
 var constants;
 var deadTimer;
+
 var images = {
     pipe:{
         img:new Image(),
