@@ -8,15 +8,15 @@ var deadTimer;
 var images = {
     pipe:{
         img:new Image(),
-        src:"/images/pipe.png"
+        src:"images/pipe.png"
     },
     player:{
         img:new Image(),
-        src:"/images/bird.png" 
+        src:"images/bird.png" 
     },
     background:{
         img:new Image(),
-        src:"/images/background.png" ,
+        src:"images/background.png" ,
         offset:0
     }
 }
