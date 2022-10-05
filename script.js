@@ -109,17 +109,16 @@ function drawRotatedRectangle(x,y,w,h,color,angle){
     c.fillRect(-w/2,-h/2,w,h);
     c.restore();
 }
-function drawRotatedImage(x,y,w,h,img,angle){
+function drawRotatedImage(x,y,w,h,img,angle,mirrored){
     let degree = angle * Math.PI / 180
     let middlePoint = {
         x:x+w/2,
         y:y+h/2
     };
     c.save();
-
     c.translate(middlePoint.x,middlePoint.y)
     c.rotate(degree);
-    if(angle === 180){
+    if(mirrored === true){
         c.scale(-1, 1);
 
     }
@@ -143,7 +142,7 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
 
     this.draw = function(){
         c.fillStyle = this.color;
-        drawRotatedImage(canvas.width-this.x,-100,this.width,this.heightUpper-this.gapPosition+100,images.pipe.img,180)
+        drawRotatedImage(canvas.width-this.x,-100,this.width,this.heightUpper-this.gapPosition+100,images.pipe.img,180,true)
         drawRotatedImage(canvas.width-this.x,canvas.height-this.heightBottom-gapPosition,(this.width),this.heightBottom + gapPosition +50,images.pipe.img,0)
 
     };
@@ -211,15 +210,40 @@ window.addEventListener("keyup",function(event){
     if(event.code === "Space"){
         player.started = true;
         if(player.y > 0 && player.dead === false){
-            player.velocityY = 20*constants.sizeConstant.y;
+            player.velocityY = 25*constants.sizeConstant.y;
         }
         if(player.dead === true && player.y + player.height >= canvas.height-20){
             init();
         }
     }
 })
+window.addEventListener("keyup",function(event){
+    console.log(event.code)
+    if(event.code === "Space"){
+        player.started = true;
+        if(player.y > 0 && player.dead === false){
+            player.velocityY = 25*constants.sizeConstant.y;
+        }
+        if(player.dead === true && player.y + player.height >= canvas.height-20){
+            init();
+        }
+    }
+})
+window.addEventListener("mouseup",function(event){
+    console.log(event.code)
+    player.started = true;
+    if(player.y > 0 && player.dead === false){
+        player.velocityY = 25*constants.sizeConstant.y;
+    }
+    if(player.dead === true && player.y + player.height >= canvas.height-20){
+        init();
+    }
+    
+})
+
 window.addEventListener("resize",function(){
     init();
 })
+
 init();
 animate();
