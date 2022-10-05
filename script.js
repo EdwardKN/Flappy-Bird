@@ -39,7 +39,7 @@ function init(){
             y:canvas.height/1000
         }
     };
-    player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5*constants.sizeConstant.y,0);
+    player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5* constants.sizeConstant.y,0);
     createPipe();
 }
 function createPipe(){
@@ -70,9 +70,9 @@ function Player(x,y,width,height,weight,velocityY){
 
         this.update = function() {
             if(this.velocityY < 0){
-                this.angle = -this.velocityY*2/constants.sizeConstant.y;
+                this.angle = -this.velocityY*2;
             }else{
-                this.angle = -this.velocityY/constants.sizeConstant.y;
+                this.angle = -this.velocityY;
             }
             if(this.angle > 90){
                 this.angle = 90;
@@ -80,7 +80,7 @@ function Player(x,y,width,height,weight,velocityY){
 
             if(this.started === true && this.y + this.height < canvas.height){
                 this.velocityY -= constants.gravity / constants.sizeConstant.y;
-                this.y -= this.velocityY*this.weight / constants.sizeConstant.y;
+                this.y -= this.velocityY*this.weight;
             }
             if(this.y + this.height > canvas.height -20){
                 this.angle = 90;
@@ -234,7 +234,7 @@ window.addEventListener("mouseup",function(event){
     console.log(event.code)
     player.started = true;
     if(player.y > 0 && player.dead === false){
-        player.velocityY = 25*constants.sizeConstant.y;
+        player.velocityY = 25;
     }
     if(player.dead === true && player.y + player.height >= canvas.height-20){
         init();
