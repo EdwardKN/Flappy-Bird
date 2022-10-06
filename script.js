@@ -38,8 +38,8 @@ function Player(x,y,width,height,weight,velocityY){
             drawRotatedImage(this.x,this.y,this.width,this.height, images.player.img,this.angle);
                                        
             c.fillStyle = "black";
-            c.font = "30px Arial";
-            c.fillText("Poäng: " +this.points, canvas.width/2-50, 50);
+            c.font =100*constants.sizeConstant.y+"px Arial";
+            c.fillText(this.points, canvas.width/2-10, 100*constants.sizeConstant.y);
         };
 
         this.update = function() {
@@ -49,7 +49,7 @@ function Player(x,y,width,height,weight,velocityY){
             }else{
                 this.angle = -this.velocityY;
             };
-            
+
             if(this.angle > 90){
                 this.angle = 90;
             };
@@ -130,7 +130,6 @@ function drawRotatedImage(x,y,w,h,img,angle,mirrored){
     if(mirrored === true){
         c.scale(-1, 1);
     }
-
     c.drawImage(img,-w/2,-h/2,w,h);
     c.restore();
 }
