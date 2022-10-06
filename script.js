@@ -90,11 +90,11 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
     };
 
     this.update = function(){
+        this.draw();
         if(player.started === true){
-            this.draw();
             this.x+=(2+player.points/50)*constants.sizeConstant.x;
             if(this.x > canvas.width/3-player.points*5*constants.sizeConstant.x && this.created === false){
-                createPipe();
+                createPipe(0);
                 this.created = true;
             }
 
@@ -147,8 +147,8 @@ function jump(){
 function animate(){
     requestAnimationFrame(animate);
     c.clearRect(0,0,canvas.width,canvas.height);
-    c.drawImage(images.background.img,images.background.offset%canvas.width,0,canvas.width,canvas.height);
-    c.drawImage(images.background.img,images.background.offset%canvas.width + canvas.width-1,0,canvas.width,canvas.height);
+    c.drawImage(images.background.img,images.background.offset%canvas.width,-400*constants.sizeConstant.y,canvas.width,canvas.height+400*constants.sizeConstant.y);
+    c.drawImage(images.background.img,images.background.offset%canvas.width + canvas.width-1,-400*constants.sizeConstant.y,canvas.width,canvas.height+400*constants.sizeConstant.y);
     if(player.dead === true){
         pipeArray.forEach(Pipe=> {
             Pipe.draw();
@@ -184,10 +184,10 @@ function init(){
         }
     };
     player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5* constants.sizeConstant.y,0);
-    createPipe();
+    createPipe(canvas.width/3);
 };
-function createPipe(){
-    pipeArray.push(new Pipe(0,0,canvas.width/10,canvas.height/2.9,canvas.height/2.9 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
+function createPipe(x){
+    pipeArray.push(new Pipe(x,0,canvas.width/10,canvas.height/2.9,canvas.height/2.9 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
 };
 
 window.addEventListener("resize",function(){
