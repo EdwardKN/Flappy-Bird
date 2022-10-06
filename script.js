@@ -104,7 +104,7 @@ function Pipe(x,y,width,heightUpper,heightBottom,gapPosition){
                 player.dead = true;
             }
             
-            if(detectCollition(player.x+ player.width/2,0,player.width,5,canvas.width-this.x+this.width/2,0,this.width,5) && this.givenPoint === false){
+            if(detectCollition(player.x-player.width,0,player.width,5,canvas.width-this.x+this.width,0,this.width,5) && this.givenPoint === false){
                 this.givenPoint = true;
                 player.points++;
             };
