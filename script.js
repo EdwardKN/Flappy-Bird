@@ -38,7 +38,6 @@ var images = {
 
 function preRender(imageObject){
     Object.entries(imageObject).forEach(image => {
-        console.log(image)
         image[1].src.forEach(sorce => {
             image[1].img.src = sorce;
             c.drawImage(image[1].img,0,0)
