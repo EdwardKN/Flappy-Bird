@@ -47,7 +47,7 @@ png_font = {
         callback()
       }
       if(typeof fontImageUrl === 'undefined' || fontImageUrl === null){
-        fontImageUrl = '.images/unifont.png';
+        fontImageUrl = './unifont.png';
       }
       this.fontImage.src = fontImageUrl;
     },
