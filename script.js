@@ -88,16 +88,14 @@ class Player {
                 this.velocityY -= constants.gravity / constants.sizeConstant.y;
                 this.y -= this.velocityY * this.weight;
             };
-            if (this.y + this.height > canvas.height - 20) {
+            if (this.y + this.height >= canvas.height - canvas.height/13 - 5) {
                 this.angle = 90;
-                this.y = canvas.height - this.width;
-            };
+                this.y = canvas.height - this.width  - canvas.height/13;
+                this.dead = true;
 
+            };
             this.draw();
 
-            if (this.y + this.height >= canvas.height - 20) {
-                this.dead = true;
-            };
         };
 
         this.jump = function () {
@@ -105,7 +103,7 @@ class Player {
             if (this.y > canvas.height / 15 && this.dead === false) {
                 this.velocityY = 32;
             };
-            if (this.dead === true && this.y + this.height >= canvas.height - 20) {
+            if (this.dead === true && this.y + this.height >= canvas.height - this.width - canvas.height/13) {
                 init();
             };
         };
@@ -130,7 +128,8 @@ class Pipe {
             drawRotatedImage(canvas.width - this.x, 0, this.width, this.heightUpper - this.gapPosition, images.pipe.img[0], 180, true);
             drawRotatedImage(canvas.width - this.x, this.heightUpper - this.gapPosition - canvas.height / 9, this.width, canvas.height / 8, images.pipetip.img[0], 180, true);
 
-            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, (this.width), this.heightBottom + gapPosition + 50, images.pipe.img[0], 0);
+            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, (this.width), this.heightBottom + gapPosition + 50-canvas.height/6, images.pipe.img[0], 0);
+
 
             drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition - canvas.height / 100, (this.width), canvas.height / 8, images.pipetip.img[0], 0);
         };
@@ -183,15 +182,13 @@ function drawRotatedImage(x,y,w,h,img,angle,mirrored){
 }
 
 function drawBackground(){
-    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4,0,canvas.width/4,canvas.height);
-    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4 + canvas.width/4 -1,0,canvas.width/4,canvas.height);
-    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4 + canvas.width/2 -2,0,canvas.width/4,canvas.height);
-    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4 + canvas.width - canvas.width/4 -3,0,canvas.width/4,canvas.height);
-    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4 + canvas.width -4   ,0,canvas.width/4,canvas.height);
+    c.drawImage(images.background.img[0],images.background.offset%canvas.width/2,-canvas.height/1.5,canvas.width/2,canvas.height*2);
+    c.drawImage(images.background.img[0],images.background.offset%canvas.width/2 + canvas.width/2 -1,-canvas.height/1.5,canvas.width/2,canvas.height*2);
+    c.drawImage(images.background.img[0],images.background.offset%canvas.width/2 + canvas.width -2,-canvas.height/1.5,canvas.width/2,canvas.height*2);
 
-    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
-    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2 + canvas.width/2,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
-    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2 + canvas.width,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
+
+    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2,canvas.height-canvas.height/10,canvas.width/1,canvas.height/2);
+    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2 + canvas.width,canvas.height-canvas.height/10,canvas.width/1,canvas.height/2);
 }
 
 function animate(){
