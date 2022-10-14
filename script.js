@@ -4,7 +4,7 @@ var c = canvas.getContext("2d");
 png_font.setup(document.getElementById("canvas").getContext("2d"));
 
 var player;
-var pipeArray;
+var pipeArray = [];
 var constants;
 
 var images = {
@@ -203,7 +203,9 @@ function animate(){
 
     if(player.dead === true){
         pipeArray.forEach(Pipe=> {
+            if(Pipe.x<canvas.width+Pipe.width){
             Pipe.draw();
+            }
         });
         
     }else{
@@ -231,7 +233,6 @@ function init(){
 
     preRender(images);
 
-    pipeArray = [];
     constants = {
         gravity: 2*canvas.height/1000,
         sizeConstant:{
@@ -239,15 +240,31 @@ function init(){
             y:canvas.height/1000
         }
     };
+    pipeArray.forEach(pipe => {
+        if(pipe.x>(canvas.width/3)*2){
+            pipeArray.forEach(pipe2 => {
+                pipe2.x -= canvas.width/3
+            })
+        }
+    })
     player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5*constants.sizeConstant.y,0,200);
-    createPipe(canvas.width/3);
 };
 function createPipe(x){
     pipeArray.push(new Pipe(x,0,canvas.width/10,canvas.height/2.9,canvas.height/2.9 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
 };
 
+function resetPipe(){
+    pipeArray = [];
+
+    createPipe(canvas.width/3);
+
+}
+
 window.addEventListener("resize",function(){
+
     init();
+    resetPipe();
+
 });
 
 window.addEventListener("keyup",function(){
@@ -258,4 +275,6 @@ window.addEventListener("mouseup",function(){
 });
 
 init();
+resetPipe();
+
 animate();
