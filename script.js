@@ -18,11 +18,11 @@ var images = {
         src:["./images/bird.png","./images/bird2.png"]
     },
     background:{
-        src:["./images/background.png"] ,
+        src:["./images/background.png"],
         offset:0
     },
     ground:{
-        src:["./images/ground.png"] ,
+        src:["./images/ground.png"],
         offset:0
     }
 };
@@ -30,11 +30,13 @@ var images = {
 
 function preRender(imageObject){
     Object.entries(imageObject).forEach(image => {
-        image[1].img = new Image()
-        image[1].src.forEach(sorce => {
-            image[1].img.src = sorce;
-            c.drawImage(image[1].img,0,0)
-        })
+        image[1].img = [];
+        for(i=0;i<image[1].src.length;i++){
+            image[1].img.push(new Image());
+
+            image[1].img[i].src = image[1].src[i];
+            c.drawImage(image[1].img[i],0,0)
+        }
     });
 }
 
@@ -63,8 +65,7 @@ class Player {
         }, animationSpeed);
 
         this.draw = function () {
-            images.player.img.src = images.player.src[this.currentAnimationFrame % images.player.src.length];
-            drawRotatedImage(this.x, this.y, this.width, this.height, images.player.img, this.angle);
+            drawRotatedImage(this.x, this.y, this.width, this.height, images.player.img[this.currentAnimationFrame % images.player.src.length], this.angle);
 
             c.fillStyle = "black";
             png_font.drawText(`${this.points}`, [canvas.width / 2, 0], "#403340", Math.floor(this.height / 8), null, false);
@@ -126,12 +127,12 @@ class Pipe {
         this.color = "gray";
 
         this.draw = function () {
-            drawRotatedImage(canvas.width - this.x, 0, this.width, this.heightUpper - this.gapPosition, images.pipe.img, 180, true);
-            drawRotatedImage(canvas.width - this.x, this.heightUpper - this.gapPosition - canvas.height / 9, this.width, canvas.height / 8, images.pipetip.img, 180, true);
+            drawRotatedImage(canvas.width - this.x, 0, this.width, this.heightUpper - this.gapPosition, images.pipe.img[0], 180, true);
+            drawRotatedImage(canvas.width - this.x, this.heightUpper - this.gapPosition - canvas.height / 9, this.width, canvas.height / 8, images.pipetip.img[0], 180, true);
 
-            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, (this.width), this.heightBottom + gapPosition + 50, images.pipe.img, 0);
+            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, (this.width), this.heightBottom + gapPosition + 50, images.pipe.img[0], 0);
 
-            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition - canvas.height / 100, (this.width), canvas.height / 8, images.pipetip.img, 0);
+            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition - canvas.height / 100, (this.width), canvas.height / 8, images.pipetip.img[0], 0);
         };
 
         this.update = function () {
@@ -182,15 +183,15 @@ function drawRotatedImage(x,y,w,h,img,angle,mirrored){
 }
 
 function drawBackground(){
-    c.drawImage(images.background.img,images.background.offset%canvas.width/4,0,canvas.width/4,canvas.height);
-    c.drawImage(images.background.img,images.background.offset%canvas.width/4 + canvas.width/4 -1,0,canvas.width/4,canvas.height);
-    c.drawImage(images.background.img,images.background.offset%canvas.width/4 + canvas.width/2 -2,0,canvas.width/4,canvas.height);
-    c.drawImage(images.background.img,images.background.offset%canvas.width/4 + canvas.width - canvas.width/4 -3,0,canvas.width/4,canvas.height);
-    c.drawImage(images.background.img,images.background.offset%canvas.width/4 + canvas.width -4   ,0,canvas.width/4,canvas.height);
+    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4,0,canvas.width/4,canvas.height);
+    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4 + canvas.width/4 -1,0,canvas.width/4,canvas.height);
+    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4 + canvas.width/2 -2,0,canvas.width/4,canvas.height);
+    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4 + canvas.width - canvas.width/4 -3,0,canvas.width/4,canvas.height);
+    c.drawImage(images.background.img[0],images.background.offset%canvas.width/4 + canvas.width -4   ,0,canvas.width/4,canvas.height);
 
-    c.drawImage(images.ground.img,images.ground.offset%canvas.width/2,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
-    c.drawImage(images.ground.img,images.ground.offset%canvas.width/2 + canvas.width/2,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
-    c.drawImage(images.ground.img,images.ground.offset%canvas.width/2 + canvas.width,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
+    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
+    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2 + canvas.width/2,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
+    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2 + canvas.width,canvas.height-canvas.height/5,canvas.width/2,canvas.height/5);
 }
 
 function animate(){
