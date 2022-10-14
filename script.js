@@ -128,7 +128,7 @@ class Pipe {
             drawRotatedImage(canvas.width - this.x, 0, this.width, this.heightUpper - this.gapPosition, images.pipe.img[0], 180, true);
             drawRotatedImage(canvas.width - this.x, this.heightUpper - this.gapPosition - canvas.height / 9, this.width, canvas.height / 8, images.pipetip.img[0], 180, true);
 
-            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, (this.width), this.heightBottom + gapPosition + 50-canvas.height/6, images.pipe.img[0], 0);
+            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, (this.width), this.heightBottom + gapPosition - canvas.height/10, images.pipe.img[0], 0);
 
 
             drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition - canvas.height / 100, (this.width), canvas.height / 8, images.pipetip.img[0], 0);
@@ -147,6 +147,8 @@ class Pipe {
                 if (detectCollition(player.x, player.y, player.width, player.height, canvas.width - this.x, 0, this.width, this.heightUpper - this.gapPosition) ||
                     detectCollition(player.x, player.y, player.width, player.height, canvas.width - this.x, canvas.height - this.heightBottom - gapPosition, this.width, this.heightBottom + gapPosition)) {
                     player.dead = true;
+                    player.velocityY = 0;
+
                 }
 
                 if (detectCollition(player.x - player.width, 0, player.width, 5, canvas.width - this.x + this.width, 0, this.width, 5) && this.givenPoint === false) {
@@ -177,7 +179,7 @@ function drawRotatedImage(x,y,w,h,img,angle,mirrored){
     if(mirrored === true){
         c.scale(-1, 1);
     }
-    c.drawImage(img,-w/2,-h/2,w,h);
+    c.drawImage(img,Math.floor(-w/2),Math.floor(-h/2),Math.floor(w),Math.floor(h));
     c.restore();
 }
 
@@ -187,8 +189,8 @@ function drawBackground(){
     c.drawImage(images.background.img[0],images.background.offset%canvas.width/2 + canvas.width -2,-canvas.height/1.5,canvas.width/2,canvas.height*2);
 
 
-    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2,canvas.height-canvas.height/10,canvas.width/1,canvas.height/2);
-    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width/2 + canvas.width,canvas.height-canvas.height/10,canvas.width/1,canvas.height/2);
+    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width,canvas.height-canvas.height/10,canvas.width/1,canvas.height/2);
+    c.drawImage(images.ground.img[0],images.ground.offset%canvas.width + canvas.width,canvas.height-canvas.height/10,canvas.width/1,canvas.height/2);
 }
 
 function animate(){
@@ -211,7 +213,7 @@ function animate(){
             }
         });
         if(player.started === true){
-            images.ground.offset -= ((2+player.points/50)*constants.sizeConstant.x)*2;
+            images.ground.offset -= ((2+player.points/50)*constants.sizeConstant.x);
 
             images.background.offset -=(1+player.points/20)*constants.sizeConstant.x;
         };
