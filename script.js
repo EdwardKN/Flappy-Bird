@@ -13,31 +13,28 @@ var constants;
 
 var images = {
     pipe:{
-        img:new Image(),
         src:["./images/pipe.png"]
     },
     pipetip:{
-        img:new Image(),
         src:["./images/pipetip.png"]
     },
     player:{
-        img:new Image(),
         src:["./images/bird.png","./images/bird2.png"]
     },
     background:{
-        img:new Image(),
         src:["./images/background.png"] ,
         offset:0
     },
     ground:{
-        img:new Image(),
         src:["./images/ground.png"] ,
         offset:0
     }
 };
 
+
 function preRender(imageObject){
     Object.entries(imageObject).forEach(image => {
+        image[1].img = new Image()
         image[1].src.forEach(sorce => {
             image[1].img.src = sorce;
             c.drawImage(image[1].img,0,0)
@@ -65,13 +62,11 @@ function Player(x,y,width,height,weight,velocityY,animationSpeed){
         setInterval(() => {
             if(this.dead == false && this.started === true){
                 this.currentAnimationFrame++;
-
             }
         }, animationSpeed);
         
         this.draw = function(){
-            images.player.img.src = images.player.src[this.currentAnimationFrame%2]
-
+            images.player.img.src = images.player.src[this.currentAnimationFrame%images.player.src.length]
             drawRotatedImage(this.x,this.y,this.width,this.height, images.player.img,this.angle);
                                        
             c.fillStyle = "black";
@@ -187,6 +182,7 @@ function jump(){
 };
 
 function animate(){
+    
     requestAnimationFrame(animate);
 
     c.clearRect(0,0,canvas.width,canvas.height);
@@ -219,6 +215,7 @@ function animate(){
         };
     };
     player.update();
+    
 };
 
 
@@ -232,6 +229,7 @@ function init(){
     c.imageSmoothingEnabled = false;
 
     preRender(images);
+
 
     pipeArray = [];
     constants = {
