@@ -1,3 +1,6 @@
+(function() {
+
+
 var canvas = document.getElementById("canvas");
 var c = canvas.getContext("2d");
 
@@ -255,7 +258,7 @@ function animate(){
     if(player.dead === true){
         pipeArray.forEach(Pipe=> {
             if(Pipe.x<canvas.width+Pipe.width){
-            Pipe.draw();
+                Pipe.draw();
             }
         });
         
@@ -316,3 +319,5 @@ window.addEventListener("mouseup",function(){
 init();
 loadSounds(sounds);
 animate();
+
+})();
