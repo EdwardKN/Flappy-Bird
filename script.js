@@ -291,13 +291,7 @@ function init(){
             y:canvas.height/1000
         }
     };
-    pipeArray.forEach(pipe => {
-        if(pipe.x>(canvas.width/3)*2){
-            pipeArray.forEach(pipe2 => {
-                pipe2.x -= canvas.width/3
-            })
-        }
-    })
+    resetPipe();
     player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5*constants.sizeConstant.y,0,200);
 };
 function createPipe(x){
