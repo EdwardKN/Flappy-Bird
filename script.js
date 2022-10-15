@@ -7,6 +7,24 @@ var player;
 var pipeArray = [];
 var constants;
 
+var sounds = {
+    die:{
+        src:"https://gamefiles.s3.eu-north-1.amazonaws.com/die.mp3"
+    },
+    hit:{
+        src:"https://gamefiles.s3.eu-north-1.amazonaws.com/hit.mp3"
+    },
+    point:{
+        src:"https://gamefiles.s3.eu-north-1.amazonaws.com/point.mp3"
+    },
+    swoosh:{
+        src:"https://gamefiles.s3.eu-north-1.amazonaws.com/swoosh.mp3"
+    },
+    wing:{
+        src:"https://gamefiles.s3.eu-north-1.amazonaws.com/wing.mp3"
+    },
+}
+
 var images = {
     pipe:{
         src:["./images/pipe.png"]
@@ -40,6 +58,13 @@ function preRender(imageObject){
     });
 }
 
+function loadSounds(soundObject){
+    Object.entries(soundObject).forEach(sound => {
+        sound[1].sound = new Audio(sound[1].src)
+    });
+}
+
+
 
 
 class Player {
@@ -54,7 +79,7 @@ class Player {
         this.color = "black";
         this.dead = false;
         this.points = 0;
-        this.angle = 45;
+        this.angle = 0;
 
         this.currentAnimationFrame = 0;
 
@@ -74,26 +99,35 @@ class Player {
 
         this.update = function () {
 
-            if (this.velocityY < 0) {
-                this.angle = -this.velocityY;
-            } else {
-                this.angle = -this.velocityY;
-            };
+            if(player.started === true){
 
-            if (this.angle > 90) {
-                this.angle = 90;
-            };
+                if (this.velocityY < 0) {
+                    this.angle = -this.velocityY*2;
+                } else {
+                    this.angle = -this.velocityY;
+                };
 
-            if (this.started === true && this.y + this.height < canvas.height) {
-                this.velocityY -= constants.gravity / constants.sizeConstant.y;
-                this.y -= this.velocityY * this.weight;
-            };
-            if (this.y + this.height >= canvas.height - canvas.height/13 - 5) {
-                this.angle = 90;
-                this.y = canvas.height - this.width  - canvas.height/13;
-                this.dead = true;
+                if (this.angle >= 90) {
+                    this.angle = 90;
+                };
 
-            };
+                if (this.started === true && this.y + this.height < canvas.height) {
+                    this.velocityY -= constants.gravity / constants.sizeConstant.y;
+                    this.y -= this.velocityY * this.weight;
+                };
+                if (this.y + this.height >= canvas.height - canvas.height/13 - 5) {
+                    if(this.dead === false){
+                        playSound(sounds.hit.sound)
+                    }
+
+                    this.angle = 90;
+                    this.y = canvas.height - this.width  - canvas.height/13;
+                    this.dead = true;
+                    this.started = false;
+                };
+            }else{
+
+            }
             this.draw();
 
         };
@@ -101,7 +135,8 @@ class Player {
         this.jump = function () {
             this.started = true;
             if (this.y > canvas.height / 15 && this.dead === false) {
-                this.velocityY = 32;
+                playSound(sounds.wing.sound)
+                this.velocityY = 32;    
             };
             if (this.dead === true && this.y + this.height >= canvas.height - this.width - canvas.height/13) {
                 init();
@@ -110,6 +145,8 @@ class Player {
 
     }
 };
+
+
 
 class Pipe {
     constructor(x, y, width, heightUpper, heightBottom, gapPosition) {
@@ -146,14 +183,23 @@ class Pipe {
 
                 if (detectCollition(player.x, player.y, player.width, player.height, canvas.width - this.x, 0, this.width, this.heightUpper - this.gapPosition) ||
                     detectCollition(player.x, player.y, player.width, player.height, canvas.width - this.x, canvas.height - this.heightBottom - gapPosition, this.width, this.heightBottom + gapPosition)) {
+                    if(player.dead === false){
+                        player.velocityY = 20;
+
+                        playSound(sounds.hit.sound)
+                        setTimeout(() => {
+                            playSound(sounds.die.sound)
+                        }, 200);
+                    }
                     player.dead = true;
-                    player.velocityY = 0;
+                    
 
                 }
 
-                if (detectCollition(player.x - player.width, 0, player.width, 5, canvas.width - this.x + this.width, 0, this.width, 5) && this.givenPoint === false) {
+                if (detectCollition(player.x - player.width/2, 0, player.width, 5, canvas.width - this.x + this.width, 0, this.width, 5) && this.givenPoint === false) {
                     this.givenPoint = true;
                     player.points++;
+                    playSound(sounds.point.sound)
                 };
             };
         };
@@ -164,6 +210,11 @@ function detectCollition(x,y,w,h,x2,y2,w2,h2){
     if(x+w>x2 && x<x2+w2 && y+h>y2 && y<y2+h2){
             return true;
         };
+};
+
+function playSound(sound){
+    let myClonedAudio = sound.cloneNode();
+    myClonedAudio.play();
 };
 
 function drawRotatedImage(x,y,w,h,img,angle,mirrored){
@@ -276,5 +327,5 @@ window.addEventListener("mouseup",function(){
 
 init();
 resetPipe();
-
+loadSounds(sounds);
 animate();
