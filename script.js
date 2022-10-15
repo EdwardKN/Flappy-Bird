@@ -189,7 +189,7 @@ class Pipe {
                         playSound(sounds.hit.sound)
                         setTimeout(() => {
                             playSound(sounds.die.sound)
-                        }, 200);
+                        }, 350);
                     }
                     player.dead = true;
                     
