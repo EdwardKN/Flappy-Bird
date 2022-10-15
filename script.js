@@ -291,24 +291,18 @@ function init(){
             y:canvas.height/1000
         }
     };
-    resetPipe();
+    pipeArray = [];
+
+    createPipe(canvas.width/3);
     player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5*constants.sizeConstant.y,0,200);
 };
 function createPipe(x){
     pipeArray.push(new Pipe(x,0,canvas.width/10,canvas.height/2.9,canvas.height/2.9 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
 };
 
-function resetPipe(){
-    pipeArray = [];
-
-    createPipe(canvas.width/3);
-
-}
 
 window.addEventListener("resize",function(){
-
     init();
-    resetPipe();
 
 });
 
@@ -320,6 +314,5 @@ window.addEventListener("mouseup",function(){
 });
 
 init();
-resetPipe();
 loadSounds(sounds);
 animate();
