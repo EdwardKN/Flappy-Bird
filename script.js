@@ -137,9 +137,9 @@ class Player {
 
         this.jump = function () {
             this.started = true;
-            if (this.y > canvas.height / 15 && this.dead === false) {
+            if (this.dead === false) {
                 playSound(sounds.wing.sound);
-                this.velocityY = 35;    
+                this.velocityY = 25;    
                 this.y -= this.velocityY * this.weight*2;
             };
             if (this.dead === true && this.y + this.height >= canvas.height - this.width - canvas.height/13) {
@@ -178,15 +178,15 @@ class Pipe {
         this.update = function () {
             this.draw();
             if (player.started === true) {
-                this.x += (5 + player.points / 50) * constants.sizeConstant.x;
+                this.x += (4 + player.points / 50) * constants.sizeConstant.x;
                 if (this.x > canvas.width / 3 - player.points * 5 * constants.sizeConstant.x && this.created === false) {
                     createPipe(0);
                     this.created = true;
                 }
 
 
-                if (detectCollition(player.x, player.y, player.width, player.height, canvas.width - this.x, 0, this.width, this.heightUpper - this.gapPosition) ||
-                    detectCollition(player.x, player.y, player.width, player.height, canvas.width - this.x, canvas.height - this.heightBottom - gapPosition, this.width, this.heightBottom + gapPosition)) {
+                if (detectCollition(player.x+canvas.width/100, player.y+canvas.height/100, player.width-canvas.width/50, player.height-canvas.height/50, canvas.width - this.x, -500+player.y, this.width, this.heightUpper - this.gapPosition + 500 - player.y) ||
+                    detectCollition(player.x+canvas.width/100, player.y+canvas.height/100, player.width-canvas.width/50, player.height-canvas.height/50, canvas.width - this.x, canvas.height - this.heightBottom - gapPosition, this.width, this.heightBottom + gapPosition)) {
                     if(player.dead === false){
                         player.velocityY = 20;
 
@@ -289,7 +289,7 @@ function init(){
     preRender(images);
 
     constants = {
-        gravity: 2*canvas.height/1000,
+        gravity: 2*canvas.height*7/10000,
         sizeConstant:{
             x:canvas.width/1000,
             y:canvas.height/1000
