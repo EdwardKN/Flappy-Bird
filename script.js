@@ -139,7 +139,7 @@ class Player {
             this.started = true;
             if (this.dead === false) {
                 playSound(sounds.wing.sound);
-                this.velocityY = 25;    
+                this.velocityY = 27;    
                 this.y -= this.velocityY * this.weight*2;
             };
             if (this.dead === true && this.y + this.height >= canvas.height - this.width - canvas.height/13) {
@@ -301,7 +301,7 @@ function init(){
     player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5*constants.sizeConstant.y,0,200);
 };
 function createPipe(x){
-    pipeArray.push(new Pipe(x,0,canvas.width/10,canvas.height/2.9,canvas.height/2.9 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
+    pipeArray.push(new Pipe(x,0,canvas.width/10,canvas.height/2.8,canvas.height/2.8 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
 };
 
 
