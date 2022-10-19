@@ -178,7 +178,7 @@ class Pipe {
         this.update = function () {
             this.draw();
             if (player.started === true) {
-                this.x += (4 + player.points / 50) * constants.sizeConstant.x;
+                this.x += (3 + player.points / 50) * constants.sizeConstant.x;
                 if (this.x > canvas.width / 3 - player.points * 5 * constants.sizeConstant.x && this.created === false) {
                     createPipe(0);
                     this.created = true;
