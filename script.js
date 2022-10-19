@@ -138,9 +138,9 @@ class Player {
         this.jump = function () {
             this.started = true;
             if (this.y > canvas.height / 15 && this.dead === false) {
-                playSound(sounds.wing.sound)
+                playSound(sounds.wing.sound);
                 this.velocityY = 35;    
-                this.y -= this.velocityY * this.weight;
+                this.y -= this.velocityY * this.weight*2;
             };
             if (this.dead === true && this.y + this.height >= canvas.height - this.width - canvas.height/13) {
                 init();
@@ -178,7 +178,7 @@ class Pipe {
         this.update = function () {
             this.draw();
             if (player.started === true) {
-                this.x += (3 + player.points / 50) * constants.sizeConstant.x;
+                this.x += (5 + player.points / 50) * constants.sizeConstant.x;
                 if (this.x > canvas.width / 3 - player.points * 5 * constants.sizeConstant.x && this.created === false) {
                     createPipe(0);
                     this.created = true;
