@@ -53,14 +53,12 @@ function preRender(imageObject){
     Object.entries(imageObject).forEach(image => {
         image[1].img = [];
         for(i=0;i<image[1].src.length;i++){
-            image[1].img.push(new Image());
-
+            image[1].img[i] = new Image;
             image[1].img[i].src = image[1].src[i];
             c.drawImage(image[1].img[i],0,0)
         }
     });
 }
-
 function loadSounds(soundObject){
     Object.entries(soundObject).forEach(sound => {
         sound[1].sound = new Audio(sound[1].src)
