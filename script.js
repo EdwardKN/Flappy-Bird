@@ -55,15 +55,16 @@ function preRender(imageObject){
         for(i=0;i<image[1].src.length;i++){
             image[1].img[i] = new Image;
             image[1].img[i].src = image[1].src[i];
-            c.drawImage(image[1].img[i],0,0)
-        }
+            c.drawImage(image[1].img[i],0,0);
+        };
     });
-}
+};
+
 function loadSounds(soundObject){
     Object.entries(soundObject).forEach(sound => {
-        sound[1].sound = new Audio(sound[1].src)
+        sound[1].sound = new Audio(sound[1].src);
     });
-}
+};
 
 
 
@@ -87,10 +88,14 @@ class Player {
         setInterval(() => {
             if (this.dead == false && this.started === true) {
                 this.currentAnimationFrame++;
-            }
+            };
         }, animationSpeed);
 
-        this.draw = function () {
+        }
+
+        
+
+        draw() {
             drawRotatedImage(this.x, this.y, this.width, this.height, images.player.img[this.currentAnimationFrame % images.player.src.length], this.angle);
 
             c.fillStyle = "black";
@@ -98,7 +103,7 @@ class Player {
 
         };
 
-        this.update = function () {
+        update() {
 
             if(player.started === true){
 
@@ -118,22 +123,20 @@ class Player {
                 };
                 if (this.y + this.height >= canvas.height - canvas.height/13 - 5) {
                     if(this.dead === false){
-                        playSound(sounds.hit.sound)
-                    }
+                        playSound(sounds.hit.sound);
+                    };
 
                     this.angle = 90;
                     this.y = canvas.height - this.width  - canvas.height/13;
                     this.dead = true;
                     this.started = false;
                 };
-            }else{
-
             }
             this.draw();
 
         };
 
-        this.jump = function () {
+        jump() {
             this.started = true;
             if (this.dead === false) {
                 playSound(sounds.wing.sound);
@@ -143,9 +146,9 @@ class Player {
             if (this.dead === true && this.y + this.height >= canvas.height - this.width - canvas.height/13) {
                 init();
             };
-        };
+        
 
-    }
+    };
 };
 
 
@@ -162,35 +165,36 @@ class Pipe {
         this.dead = false;
         this.givenPoint = false;
         this.color = "gray";
+        }
 
-        this.draw = function () {
+        draw() {
             drawRotatedImage(canvas.width - this.x, 0, this.width, this.heightUpper - this.gapPosition, images.pipe.img[0], 180, true);
             drawRotatedImage(canvas.width - this.x, this.heightUpper - this.gapPosition - canvas.height / 9, this.width, canvas.height / 8, images.pipetip.img[0], 180, true);
 
-            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, (this.width), this.heightBottom + gapPosition - canvas.height/10, images.pipe.img[0], 0);
+            drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, (this.width), this.heightBottom + this.gapPosition - canvas.height/10 + 1, images.pipe.img[0], 0);
 
 
             drawRotatedImage(canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition - canvas.height / 100, (this.width), canvas.height / 8, images.pipetip.img[0], 0);
         };
 
-        this.update = function () {
+        update() {
             this.draw();
             if (player.started === true) {
                 this.x += (3 + player.points / 50) * constants.sizeConstant.x;
                 if (this.x > canvas.width / 3 - player.points * 5 * constants.sizeConstant.x && this.created === false) {
                     createPipe(0);
                     this.created = true;
-                }
+                };
 
 
                 if (detectCollition(player.x+canvas.width/100, player.y+canvas.height/100, player.width-canvas.width/50, player.height-canvas.height/50, canvas.width - this.x, -500+player.y, this.width, this.heightUpper - this.gapPosition + 500 - player.y) ||
-                    detectCollition(player.x+canvas.width/100, player.y+canvas.height/100, player.width-canvas.width/50, player.height-canvas.height/50, canvas.width - this.x, canvas.height - this.heightBottom - gapPosition, this.width, this.heightBottom + gapPosition)) {
+                    detectCollition(player.x+canvas.width/100, player.y+canvas.height/100, player.width-canvas.width/50, player.height-canvas.height/50, canvas.width - this.x, canvas.height - this.heightBottom - this.gapPosition, this.width, this.heightBottom + this.gapPosition)) {
                     if(player.dead === false){
                         player.velocityY = 20;
 
-                        playSound(sounds.hit.sound)
+                        playSound(sounds.hit.sound);
                         setTimeout(() => {
-                            playSound(sounds.die.sound)
+                            playSound(sounds.die.sound);
                         }, 350);
                     }
                     player.dead = true;
@@ -201,11 +205,10 @@ class Pipe {
                 if (detectCollition(player.x - player.width/2, 0, player.width, 5, canvas.width - this.x + this.width, 0, this.width, 5) && this.givenPoint === false) {
                     this.givenPoint = true;
                     player.points++;
-                    playSound(sounds.point.sound)
+                    playSound(sounds.point.sound);
                 };
             };
-        };
-    }
+    };
 };
 
 function detectCollition(x,y,w,h,x2,y2,w2,h2){
@@ -234,7 +237,7 @@ function drawRotatedImage(x,y,w,h,img,angle,mirrored){
     }
     c.drawImage(img,Math.floor(-w/2),Math.floor(-h/2),Math.floor(w),Math.floor(h));
     c.restore();
-}
+};
 
 function drawBackground(){
     c.drawImage(images.background.img[0],images.background.offset%canvas.width/2,-canvas.height/1.5,canvas.width/2,canvas.height*2);
@@ -244,7 +247,7 @@ function drawBackground(){
 
     c.drawImage(images.ground.img[0],images.ground.offset%canvas.width,canvas.height-canvas.height/10,canvas.width/1,canvas.height/2);
     c.drawImage(images.ground.img[0],images.ground.offset%canvas.width + canvas.width,canvas.height-canvas.height/10,canvas.width/1,canvas.height/2);
-}
+};
 
 function animate(){
     
@@ -252,23 +255,23 @@ function animate(){
 
     c.clearRect(0,0,canvas.width,canvas.height);
     
-    drawBackground()
+    drawBackground();
 
     if(player.dead === true){
         pipeArray.forEach(Pipe=> {
             if(Pipe.x<canvas.width+Pipe.width){
                 Pipe.draw();
-            }
+            };
         });
         
     }else{
         pipeArray.forEach(Pipe=> {
             if(Pipe.x<canvas.width+Pipe.width){
                 Pipe.update(pipeArray);
-            }
+            };
         });
         if(player.started === true){
-            images.ground.offset -= ((2+player.points/50)*constants.sizeConstant.x);
+            images.ground.offset -= ((3+player.points/50)*constants.sizeConstant.x);
 
             images.background.offset -=(1+player.points/20)*constants.sizeConstant.x;
         };
@@ -299,13 +302,12 @@ function init(){
     player = new Player(canvas.width/10,canvas.height/3,canvas.width/15,canvas.height/10,0.5*constants.sizeConstant.y,0,200);
 };
 function createPipe(x){
-    pipeArray.push(new Pipe(x,0,canvas.width/10,canvas.height/2.8,canvas.height/2.8 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6))
+    pipeArray.push(new Pipe(x,0,canvas.width/10,canvas.height/2.8,canvas.height/2.8 ,Math.random()*canvas.height/3-Math.random()*canvas.height/6));
 };
 
 
 window.addEventListener("resize",function(){
     init();
-
 });
 
 window.addEventListener("keyup",function(){
