@@ -137,7 +137,7 @@ class Player {
             this.started = true;
             if (this.dead === false) {
                 playSound(sounds.wing.sound);
-                this.velocityY = 27;    
+                this.velocityY = 24;    
                 this.y -= this.velocityY * this.weight*2;
             };
             if (this.dead === true && this.y + this.height >= canvas.height - this.width - canvas.height/13) {
@@ -287,7 +287,7 @@ function init(){
     preRender(images);
 
     constants = {
-        gravity: 2*canvas.height*7/10000,
+        gravity: 2*canvas.height*6/10000,
         sizeConstant:{
             x:canvas.width/1000,
             y:canvas.height/1000
